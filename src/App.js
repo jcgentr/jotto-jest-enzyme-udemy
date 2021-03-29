@@ -4,7 +4,7 @@ import Input from "./Input";
 function App() {
 	return (
 		<div data-test='component-app' className='container'>
-			<Input />
+			<Input success={false} secretWord='' />
 		</div>
 	);
 }

@@ -11,21 +11,54 @@ jest.mock("react", () => ({
 	useState: (initialState) => [initialState, mockSetCurrentGuess],
 }));
 
-const defaultProps = { secretWord: "" };
+const defaultProps = { success: false, secretWord: "" };
 
 const setup = (props = {}) => {
 	const setupProps = { ...defaultProps, ...props };
 	return shallow(<Input {...setupProps} />);
 };
 
-test("Input renders without error", () => {
-	const wrapper = setup();
-	const component = findByTestAttr(wrapper, "component-input");
-	expect(component.length).toBe(1);
+describe("render tests", () => {
+	describe("success is true", () => {
+		let wrapper;
+		beforeEach(() => {
+			wrapper = setup({ success: true });
+		});
+		test("Input renders without error", () => {
+			const component = findByTestAttr(wrapper, "component-input");
+			expect(component.length).toBe(1);
+		});
+		test("input box does not show", () => {
+			const inputBox = findByTestAttr(wrapper, "input-box");
+			expect(inputBox.exists()).toBe(false);
+		});
+		test("submit button does not show", () => {
+			const submitButton = findByTestAttr(wrapper, "submit-button");
+			expect(submitButton.exists()).toBe(false);
+		});
+	});
+	describe("success is false", () => {
+		let wrapper;
+		beforeEach(() => {
+			wrapper = setup({ success: false });
+		});
+		test("Input renders without error", () => {
+			const component = findByTestAttr(wrapper, "component-input");
+			expect(component.length).toBe(1);
+		});
+		test("input box does not show", () => {
+			const inputBox = findByTestAttr(wrapper, "input-box");
+			expect(inputBox.exists()).toBe(true);
+		});
+		test("submit button does not show", () => {
+			const submitButton = findByTestAttr(wrapper, "submit-button");
+			expect(submitButton.exists()).toBe(true);
+		});
+	});
 });
 
 test("should not throw warning with expected props", () => {
-	const expectedProps = { secretWord: "" };
+	const expectedProps = defaultProps;
 	checkProps(Input, expectedProps);
 });
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-const Input = ({ secretWord }) => {
+const Input = ({ success, secretWord }) => {
 	const [currentGuess, setCurrentGuess] = useState("");
 
 	const handleClick = (event) => {
@@ -10,6 +10,8 @@ const Input = ({ secretWord }) => {
 		// TODO: update guessedWords context
 		// TODO: check against secretWord and optionally update success context
 	};
+
+	if (success) return <div data-test='component-input' />;
 
 	return (
 		<div data-test='component-input'>
@@ -36,6 +38,7 @@ const Input = ({ secretWord }) => {
 
 Input.propTypes = {
 	secretWord: PropTypes.string.isRequired,
+	success: PropTypes.bool.isRequired,
 };
 
 export default Input;
