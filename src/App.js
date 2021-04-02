@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "./Input";
 import Congrats from "./Congrats";
 import GuessedWords from "./GuessedWords";
+
+import { getSecretWord } from "./actions";
 
 function App() {
 	// TODO: get props from shared state
 	const success = false;
 	const secretWord = "party";
 	const guessedWords = [];
+
+	useEffect(() => {
+		getSecretWord();
+		return () => {
+			// cleanup
+		};
+	}, []);
 
 	return (
 		<div data-test='component-app' className='container'>
