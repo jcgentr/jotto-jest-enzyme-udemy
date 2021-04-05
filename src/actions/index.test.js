@@ -16,8 +16,8 @@ describe("getSecretWord", () => {
 				response: "party",
 			});
 		});
-
-		const secretWord = await getSecretWord();
-		expect(secretWord).toBe("party");
+		const mockSetSecretWord = jest.fn();
+		await getSecretWord(mockSetSecretWord);
+		expect(mockSetSecretWord).toHaveBeenCalledWith("party");
 	});
 });

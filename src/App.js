@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import Input from "./Input";
 import Congrats from "./Congrats";
 import GuessedWords from "./GuessedWords";
@@ -6,9 +7,10 @@ import GuessedWords from "./GuessedWords";
 import { getSecretWord } from "./actions";
 
 function App() {
+	const [secretWord, setSecretWord] = useState("");
+
 	// TODO: get props from shared state
 	const success = false;
-	const secretWord = "party";
 	const guessedWords = [];
 
 	useEffect(() => {
