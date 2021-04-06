@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect } from "react";
 
 import Input from "./Input";
 import Congrats from "./Congrats";
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
 };
 
 function App() {
-	const [state, dispatch] = useReducer(reducer, { secretWord: "" });
+	const [state, dispatch] = React.useReducer(reducer, { secretWord: null });
 
 	// TODO: get props from shared state
 	const success = false;
@@ -32,6 +32,17 @@ function App() {
 			// cleanup
 		};
 	}, []);
+
+	if (state.secretWord === null) {
+		return (
+			<div className='container' data-test='spinner'>
+				<div className='spinner-border' role='status'>
+					<span className='sr-only'>Loading...</span>
+				</div>
+				<p>Loading secret word...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div data-test='component-app' className='container'>
