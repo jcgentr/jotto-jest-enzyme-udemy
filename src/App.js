@@ -39,6 +39,8 @@ function App() {
 
 	useEffect(() => {
 		getSecretWord(setSecretWord);
+		// to test without random word server
+		setSecretWord("party");
 		return () => {
 			// cleanup
 		};
