@@ -1,13 +1,16 @@
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 
 import Congrats from "./Congrats";
-import { checkProps, findByTestAttr } from "../test/testUtils";
+import { findByTestAttr } from "../test/testUtils";
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
 
 const setup = ({ success = false, language = "en" }) => {
 	return mount(
 		<languageContext.Provider value={language}>
-			<Congrats success={success} />
+			<successContext.SuccessProvider value={[success, jest.fn()]}>
+				<Congrats />
+			</successContext.SuccessProvider>
 		</languageContext.Provider>
 	);
 };
@@ -37,8 +40,4 @@ test("should render non-empty congrats message when `success` prop is true", () 
 	const wrapper = setup({ success: true });
 	const message = findByTestAttr(wrapper, "congrats-message");
 	expect(message.text().length).not.toBe(0);
-});
-test("should not throw warning with expected props", () => {
-	const expectedProps = { success: false };
-	checkProps(Congrats, expectedProps);
 });
