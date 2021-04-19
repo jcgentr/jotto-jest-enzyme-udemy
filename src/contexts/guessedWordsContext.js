@@ -23,4 +23,4 @@ const GuessedWordsProvider = (props) => {
 	return <guessedWordsContext.Provider value={value} {...props} />;
 };
 
-export { GuessedWordsProvider, useGuessedWords };
+export default { GuessedWordsProvider, useGuessedWords };

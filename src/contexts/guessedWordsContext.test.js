@@ -1,9 +1,9 @@
 import { shallow, mount } from "enzyme";
-import { GuessedWordsProvider, useGuessedWords } from "./guessedWordsContext";
+import guessedWordsContext from "./guessedWordsContext";
 
 // for testing purposes
 const FunctionComponent = () => {
-	useGuessedWords();
+	guessedWordsContext.useGuessedWords();
 	return <div />;
 };
 
@@ -15,9 +15,9 @@ test("should throw error when useGuessedWords is not wrapped in GuessedWordsProv
 test("should not throw error when useGuessedWords is wrapped in GuessedWordsProvider", () => {
 	expect(() =>
 		mount(
-			<GuessedWordsProvider>
+			<guessedWordsContext.GuessedWordsProvider>
 				<FunctionComponent />
-			</GuessedWordsProvider>
+			</guessedWordsContext.GuessedWordsProvider>
 		)
 	).not.toThrow();
 });

@@ -1,8 +1,11 @@
 import React from "react";
 import { mount } from "enzyme";
 import { findByTestAttr, checkProps } from "../test/testUtils";
+
 import Input from "./Input";
+
 import languageContext from "./contexts/languageContext";
+import successContext from "./contexts/successContext";
 
 const mockSetCurrentGuess = jest.fn();
 
@@ -12,12 +15,12 @@ jest.mock("react", () => ({
 	useState: (initialState) => [initialState, mockSetCurrentGuess],
 }));
 
-const defaultProps = { success: false, secretWord: "" };
-
-const setup = ({ success = false, secretWord = "party", language = "en" }) => {
+const setup = ({ secretWord = "party", language = "en", success = false }) => {
 	return mount(
 		<languageContext.Provider value={language}>
-			<Input success={success} secretWord={secretWord} />
+			<successContext.SuccessProvider value={[success, jest.fn()]}>
+				<Input secretWord={secretWord} />
+			</successContext.SuccessProvider>
 		</languageContext.Provider>
 	);
 };
@@ -44,38 +47,33 @@ describe("render tests", () => {
 	describe("success is false", () => {
 		let wrapper;
 		beforeEach(() => {
-			wrapper = setup({ success: false });
+			wrapper = setup({});
 		});
 		test("Input renders without error", () => {
 			const component = findByTestAttr(wrapper, "component-input");
 			expect(component.length).toBe(1);
 		});
-		test("input box does not show", () => {
+		test("input box shows", () => {
 			const inputBox = findByTestAttr(wrapper, "input-box");
 			expect(inputBox.exists()).toBe(true);
 		});
-		test("submit button does not show", () => {
+		test("submit button shows", () => {
 			const submitButton = findByTestAttr(wrapper, "submit-button");
 			expect(submitButton.exists()).toBe(true);
 		});
 	});
 	describe("languagePicker", () => {
 		test("should render submit string in english", () => {
-			const wrapper = setup({ success: false });
+			const wrapper = setup({});
 			const submitButton = findByTestAttr(wrapper, "submit-button");
 			expect(submitButton.text()).toBe("Submit");
 		});
 		test("should render submit string in emoji", () => {
-			const wrapper = setup({ success: false, language: "emoji" });
+			const wrapper = setup({ language: "emoji" });
 			const submitButton = findByTestAttr(wrapper, "submit-button");
 			expect(submitButton.text()).toBe("🚀");
 		});
 	});
-});
-
-test("should not throw warning with expected props", () => {
-	const expectedProps = defaultProps;
-	checkProps(Input, expectedProps);
 });
 
 describe("state controlled input field", () => {
