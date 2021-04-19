@@ -2,19 +2,35 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import stringsModule from "./helpers/strings";
+import { getLetterMatchCount } from "./helpers/index";
 import languageContext from "./contexts/languageContext";
 import successContext from "./contexts/successContext";
+import guessedWordsContext from "./contexts/guessedWordsContext";
 
 const Input = ({ secretWord }) => {
 	const [currentGuess, setCurrentGuess] = useState("");
 	const language = React.useContext(languageContext);
 	const [success, setSuccess] = successContext.useSuccess();
+	const [guessedWords, setGuessedWords] = guessedWordsContext.useGuessedWords();
 
-	const handleClick = (event) => {
+	const handleSubmit = (event) => {
 		event.preventDefault();
+		// update guessedWords
+		const currentGuessLetterMatchCount = getLetterMatchCount(
+			currentGuess,
+			secretWord
+		);
+		setGuessedWords([
+			...guessedWords,
+			{
+				guessedWord: currentGuess,
+				letterMatchCount: currentGuessLetterMatchCount,
+			},
+		]);
+		// check if user guessed the secretWord
+		if (currentGuess === secretWord) setSuccess(true);
+		// clear input box
 		setCurrentGuess("");
-		// TODO: update guessedWords context
-		// TODO: check against secretWord and optionally update success context
 	};
 
 	if (success) return <div data-test='component-input' />;
@@ -34,7 +50,7 @@ const Input = ({ secretWord }) => {
 					value={currentGuess}
 				/>
 				<button
-					onClick={handleClick}
+					onClick={handleSubmit}
 					data-test='submit-button'
 					className='btn btn-primary mb-2'
 				>
