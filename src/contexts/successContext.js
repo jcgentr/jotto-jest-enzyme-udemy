@@ -19,4 +19,6 @@ const SuccessProvider = (props) => {
 	return <successContext.Provider value={value} {...props} />;
 };
 
-export default { SuccessProvider, useSuccess };
+const exportedObject = { SuccessProvider, useSuccess };
+
+export default exportedObject;

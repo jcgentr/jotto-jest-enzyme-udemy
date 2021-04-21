@@ -21,6 +21,9 @@ const GuessedWords = () => {
 						<thead className='thead-light'>
 							<tr>
 								<th>
+									{stringsModule.getStringByLanguage(language, "guessNumber")}
+								</th>
+								<th>
 									{stringsModule.getStringByLanguage(
 										language,
 										"guessColumnHeader"
@@ -37,6 +40,7 @@ const GuessedWords = () => {
 						<tbody>
 							{guessedWords.map((word, index) => (
 								<tr data-test='guessed-word' key={index}>
+									<td>{index + 1}</td>
 									<td>{word.guessedWord}</td>
 									<td>{word.letterMatchCount}</td>
 								</tr>

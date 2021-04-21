@@ -1,12 +1,26 @@
+import React from "react";
 import { mount } from "enzyme";
 import { findByTestAttr } from "../test/testUtils";
 import App from "./App";
 
-jest.mock("./actions");
-import { getSecretWord as mockGetSecretWord } from "./actions";
-import React from "react";
+import hookActions from "./actions/index";
 
-const setup = () => mount(<App />);
+const mockGetSecretWord = jest.fn().mockResolvedValue(false);
+
+const setup = (secretWord = "party") => {
+	mockGetSecretWord.mockClear();
+	hookActions.getSecretWord = mockGetSecretWord;
+
+	const mockUseReducer = jest
+		.fn()
+		.mockReturnValue([{ secretWord, language: "en" }, jest.fn()]);
+
+	React.useReducer = mockUseReducer;
+
+	// use mount, because useEffect not called on `shallow`
+	// https://github.com/airbnb/enzyme/issues/2086
+	return mount(<App />);
+};
 
 describe.each([
 	[null, true, false],
@@ -14,17 +28,15 @@ describe.each([
 ])("renders with secretWord as %s", (secretWord, loadingShows, appShows) => {
 	let wrapper;
 	let originalUseReducer;
+
 	beforeEach(() => {
 		originalUseReducer = React.useReducer;
-		const mockUseReducer = jest
-			.fn()
-			.mockReturnValue([{ secretWord, language: "en" }, jest.fn()]);
-		React.useReducer = mockUseReducer;
-		wrapper = setup();
+		wrapper = setup(secretWord);
 	});
 	afterEach(() => {
 		React.useReducer = originalUseReducer;
 	});
+
 	test(`should render loading spinner: ${loadingShows}`, () => {
 		const spinnerComponent = findByTestAttr(wrapper, "spinner");
 		expect(spinnerComponent.exists()).toBe(loadingShows);
@@ -40,11 +52,11 @@ describe("get secret word", () => {
 		mockGetSecretWord.mockClear();
 	});
 	test("should call getSecretWord on app mount", () => {
-		const wrapper = setup();
+		const wrapper = setup(null);
 		expect(mockGetSecretWord).toHaveBeenCalledTimes(1);
 	});
 	test("should not call getSecretWord on app update", () => {
-		const wrapper = setup();
+		const wrapper = setup(null);
 		mockGetSecretWord.mockClear();
 		wrapper.setProps();
 		expect(mockGetSecretWord).toHaveBeenCalledTimes(0);
